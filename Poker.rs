@@ -49,10 +49,17 @@ fn highcard(arr:[u32;5]) -> u32{
 //Has pair
 /*
     loop through the whole code and find the pairs, return the vector for all the pairs.
+    This function includes:
+    pair
+    2 pairs 
+    3 of a kind
+    4 of a kind
+    full house
 */
 
-fn hasPair(arr:[u32;5]) -> Vec<u32>{
+fn hasOrder(arr:[u32;5]) -> Vec<u32>{
     let mut result = Vec::new();
+    let mut tp = Vec::new();
     let mut temp = 0;
     for (i,item1) in arr.iter().enumerate(){
         temp = *item1;
@@ -63,26 +70,61 @@ fn hasPair(arr:[u32;5]) -> Vec<u32>{
             }
         }
     }
-    if result.is_empty{
-        
+
+    // This needs to return something else rather than pushing it in the result vector
+    if result.len() == 4{
+        if (result[1] + 13 == result[2]){
+            tp.push(4);
+        } else{
+            tp.push(2);
+        }
     }
+    else if result.len() == 3{
+        tp.push(3);
+    }
+    else if result.len() == 2{
+        tp.push(3);
+    }
+    
     return result;
 }
 
-//has two pair
-//fn hasTwoPair(arr:[u32;5]){
-    //let mut result = Vec::new();
-    //let mut count = 0;
-    //for (i,item) in arr.iter().enumerate(){
-        
-    //}
+
+//Straight types
+/*
+This includes:
+straight
+straight flush
+royal flush
+*/
+fn hasStraight(arr:[u32;5]) -> u32{
+    let mut temp = arr[0]%13;
+    for i in 1..5{
+        if(temp+1 == arr[i]%13){
+            temp+=1;
+        }else{
+            return 0;
+        }
+    }
+    return arr[0];
+}
 
 
-  
-//}
+//Flush
+/*
+    Check to see if the hand has flush, if yes return the order of the flush(1 for club 2 for diamond ....) 
+*/
+fn hasFlush(arr:[u32;5]) -> u32{
+    let mut arr = a;
+}
+
+
+
 fn main(){
     let  a = deal([42,2,3,4,5,6,7,8,9,9]);
     println!("{}",a);
-    println!("{:?}",highcard([2,3,4,5,6]));
-    println!("{:?}",hasPair([1,2,14,15,9]));
+    println!("{:?}",highcard([2,3,15,16,28]));
+    println!("{:?}",hasOrder([2,3,15,16,28]));
+    println!("{}",hasStraight([1,2,3,4,5]));
+    println!("{}",hasStraight([1,2,3,4,6]));
 }

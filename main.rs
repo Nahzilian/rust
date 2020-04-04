@@ -1,5 +1,6 @@
 const BIN: u32 = 2;
 fn main(){
+    /*
     const BASE: u32 = 10;
     let x = 5;
     let string = "Jello";
@@ -22,13 +23,15 @@ fn main(){
     println!("{:?}",array);
     let mut arr = Vec::new();
     test2(arr);
+    */
+    let mut arr = [1,2,3,4,5,6];
+    for (i,item) in arr.iter().enumerate(){
+        println!("{}",*item);
+        println!("{}",*item+1)
+     }
+
 }
 
 fn test(n:i32) ->i32{
     n+1
-}
-fn test2(arr:u32){
-    let v = vec!arr;
-    arr.push(1);
-    println!("{:?}",arr);
 }
