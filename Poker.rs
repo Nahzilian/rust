@@ -30,7 +30,7 @@ fn winner(arr1:[u32;5],arr2:[u32;5]){
     println!("In progress");
 }
 // Winner function:
-//High card
+//High card             (Gets the highest value?)
 fn highcard(arr:[u32;5]) -> u32{
     let mut result = 0;
     for (i,item) in arr.iter().enumerate(){
@@ -73,7 +73,7 @@ fn hasOrder(arr:[u32;5]) -> Vec<u32>{
 
     // This needs to return something else rather than pushing it in the result vector
     if result.len() == 4{
-        if (result[1] + 13 == result[2]){
+        if result[1] + 13 == result[2]{
             tp.push(4);
         } else{
             tp.push(2);
@@ -100,7 +100,7 @@ royal flush
 fn hasStraight(arr:[u32;5]) -> u32{
     let mut temp = arr[0]%13;
     for i in 1..5{
-        if(temp+1 == arr[i]%13){
+        if temp+1 == arr[i]%13 {
             temp+=1;
         }else{
             return 0;
@@ -114,9 +114,9 @@ fn hasStraight(arr:[u32;5]) -> u32{
 /*
     Check to see if the hand has flush, if yes return the order of the flush(1 for club 2 for diamond ....) 
 */
-fn hasFlush(arr:[u32;5]) -> u32{
-    let mut arr = a;
-}
+// fn hasFlush(arr:[u32;5]) -> u32{
+//     let mut arr = a;
+// }
 
 
 
