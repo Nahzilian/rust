@@ -34,15 +34,14 @@ fn winner(arr1:[u32;5],arr2:[u32;5]){
 fn highcard(arr:[u32;5]) -> u32{
     let mut result = 0;
     for (i,item) in arr.iter().enumerate(){
-        if (*item == 1) || (*item == 14) || (*item == 27) || (*item == 40){
+        if (*item%13 == 1){
             if result < *item{result = *item;}
             result = *item
-        }else{
-            if result < *item && (result !=1) && (*item != 40) && (*item != 14) && (*item != 27) {
+        }else if result < *item && (result%13 !=1){
                 result = *item;
             }
         }        
-    }
+
     println!("{:?}",arr);
     return result;
 }
@@ -83,13 +82,13 @@ fn hasOrder(arr:[u32;5]) -> Vec<u32>{
         tp.push(3);
     }
     else if result.len() == 2{
-        tp.push(3);
+        tp.push(1);
     }
     
     return result;
 }
 
-
+//-----------------------All functions below can be compared with highcard()---------------//
 //Straight types
 /*
 This includes:
@@ -97,16 +96,29 @@ straight
 straight flush
 royal flush
 */
-fn hasStraight(arr:[u32;5]) -> u32{
-    let mut temp = arr[0]%13;
-    for i in 1..5{
-        if temp+1 == arr[i]%13 {
-            temp+=1;
-        }else{
-            return 0;
+fn has_straight(hand: &Vec<u32>) -> bool{
+    let mut temp = hand[0]%13;
+    //try to put this in the loop
+    if hand[0]%13 == 1{
+        if hand[1]%13 == 10{
+            //Check if it's 10
+        }else if{
+            //if it's 2, continue
         }
     }
-    return arr[0];
+    for i in 1..5{
+<<<<<<< HEAD
+        if temp+1 == arr[i]%13 {
+=======
+        
+        if temp+1 == hand[i]%13 {
+>>>>>>> 60d93468efcfcac19d2605f80cbc0e3567c63d0e
+            temp+=1;
+        }else{
+            return false;
+        }
+    }
+    return true;
 }
 
 
@@ -114,17 +126,54 @@ fn hasStraight(arr:[u32;5]) -> u32{
 /*
     Check to see if the hand has flush, if yes return the order of the flush(1 for club 2 for diamond ....) 
 */
+<<<<<<< HEAD
 // fn hasFlush(arr:[u32;5]) -> u32{
 //     let mut arr = a;
 // }
+=======
+fn has_flush(hand: &Vec<u32>) -> bool{
+    let mut result = true;
+    for (i,item1) in hand.iter().enumerate(){
+        for(i,item2)in hand.iter().enumerate(){
+            if get_suit(*item1) != get_suit(*item2) {
+                result = false;
+            }
+        }
+    }
+    return result;
+    
+}
+
+// Helper functions
+
+/* Function to get the suit of a card */
+fn get_suit(card: u32) -> char {
+    if card <= 13 {
+        return 'C';
+    } else if card <= 26 {
+        return 'D';
+    } else if card <= 39 {
+        return 'H';
+    } else {
+        return 'S';
+    }
+}
+>>>>>>> 60d93468efcfcac19d2605f80cbc0e3567c63d0e
 
 
+/* Function to check if hand has a straight flush */
+fn has_straight_flush(hand: &Vec<u32>) -> bool{
+    return has_flush(hand)&& has_straight(hand);
+}
+
+fn has_royal_flush(hand: &Vec<u32>) ->bool{
+    return has_straight_flush(hand);
+}
 
 fn main(){
     let  a = deal([42,2,3,4,5,6,7,8,9,9]);
     println!("{}",a);
-    println!("{:?}",highcard([2,3,15,16,28]));
+    println!("{:?}",highcard([1,14,27,40,52]));
     println!("{:?}",hasOrder([2,3,15,16,28]));
-    println!("{}",hasStraight([1,2,3,4,5]));
-    println!("{}",hasStraight([1,2,3,4,6]));
+    
 }
