@@ -74,25 +74,13 @@ fn check_match(arr:[u32;5]) -> Vec<u32>{
 }
 
 
-fn has_pair(hand: &Vec<u32>) -> bool{
-    return hand.len() == 2;
 
-}
-fn has_three_of_kind(hand: &Vec<u32>) ->bool{
-    return hand.len() == 3;
-}
-
-fn has_two_pair(hand: &Vec<u32>) -> bool{
-    return hand.len() == 4;
-}
-
-fn has_four_of_kind(hand: &Vec<u32>) -> bool{
-    let mut result = true;
-    for (i,item1) in hand.iter().enumerate(){
-        for (j,item2) in hand.iter().enumerate(){
-            if *item1 % 13 != *item2 % 13{
-                result = false;
-            }
+    // This needs to return something else rather than pushing it in the result vector
+    if result.len() == 4{
+        if result[1] + 13 == result[2]{
+            tp.push(4);
+        } else{
+            tp.push(2);
         }
     }
     return has_two_pair(hand)&& result;
@@ -112,6 +100,10 @@ straight flush
 royal flush
 */
 fn has_straight(hand: &Vec<u32>) -> bool{
+<<<<<<< HEAD
+    let mut temp = hand[0]%13;
+   
+=======
 
     let mut valHand = Vec::new(); //New vect to hold the value (number) of the cards
     for i in 0..5{
@@ -136,6 +128,8 @@ fn has_straight(hand: &Vec<u32>) -> bool{
         return true;
     }
 
+
+>>>>>>> f8ddc440fee68b3a50448ae92237822d832cc043
     for i in 1..5{
         if temp+1 == valHand[i] {
             temp+=1;
@@ -192,7 +186,12 @@ fn has_royal_flush(hand: &Vec<u32>) ->bool{
 }
 
 fn main(){
-
+<<<<<<< HEAD
+    let  a = deal([42,2,3,4,5,6,7,8,9,9]);
+    println!("{}",a);
+    println!("{:?}",highcard([1,14,27,40,52]));
+    check_match([1,14,27,40,2]);
+=======
     // let  a = deal([42,2,3,4,5,6,7,8,9,9]);
     // println!("{}",a);
     // println!("{:?}",highcard([1,14,27,40,52]));
@@ -222,5 +221,6 @@ fn main(){
     } else {
         println!("Hand does not have a straight\n");
     }
-
+    
+>>>>>>> f8ddc440fee68b3a50448ae92237822d832cc043
 }
