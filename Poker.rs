@@ -34,7 +34,7 @@ fn winner(arr1:[u32;5],arr2:[u32;5]){
 fn highcard(arr:[u32;5]) -> u32{
     let mut result = 0;
     for (i,item) in arr.iter().enumerate(){
-        if (*item%13 == 1){
+        if *item%13 == 1{
             if result < *item{result = *item;}
             result = *item
         }else if result < *item && (result%13 !=1){
@@ -47,8 +47,7 @@ fn highcard(arr:[u32;5]) -> u32{
 }
 //Has pair
 /*
-    loop through the whole code and find the pairs, return the vector for all the pairs.
-    This function includes:
+    This part includes:
     pair
     2 pairs 
     3 of a kind
@@ -56,37 +55,53 @@ fn highcard(arr:[u32;5]) -> u32{
     full house
 */
 
-fn hasOrder(arr:[u32;5]) -> Vec<u32>{
+
+fn check_match(arr:[u32;5]) -> Vec<u32>{
     let mut result = Vec::new();
-    let mut tp = Vec::new();
-    let mut temp = 0;
     for (i,item1) in arr.iter().enumerate(){
-        temp = *item1;
         for (j,item2) in arr.iter().enumerate(){
-            if (temp + 13 == *item2) || (temp + 13*2 == *item2) || (temp + 13*3 == *item2)|| (temp + 13*4 == *item2){
-                result.push(*item1);
-                result.push(*item2);
+            if *item1 != *item2{
+                if *item1 % 13 == *item2 % 13{
+                    result.push(*item1);
+                    result.push(*item2);
+                }
             }
         }
     }
-
-    // This needs to return something else rather than pushing it in the result vector
-    if result.len() == 4{
-        if (result[1] + 13 == result[2]){
-            tp.push(4);
-        } else{
-            tp.push(2);
-        }
-    }
-    else if result.len() == 3{
-        tp.push(3);
-    }
-    else if result.len() == 2{
-        tp.push(1);
-    }
-    
+    result.sort();
+    result.dedup();
     return result;
 }
+
+
+fn has_pair(hand: &Vec<u32>) -> bool{
+    return hand.len() == 2;
+
+}
+fn has_three_of_kind(hand: &Vec<u32>) ->bool{
+    return hand.len() == 3;
+}
+
+fn has_two_pair(hand: &Vec<u32>) -> bool{
+    return hand.len() == 4;
+}
+
+fn has_four_of_kind(hand: &Vec<u32>) -> bool{
+    let mut result = true;
+    for (i,item1) in arr.iter().enumerate(){
+        for (j,item2) in arr.iter().enumerate(){
+            if *item1 % 13 != *item2 % 13{
+                result = false;
+            }
+        }
+    }
+    return has_two_pair(hand)&& result;
+}
+
+fn has_full_house(hand: &Vec<u32>) -> bool{
+    return has_pair(hand) && has_three_of_kind(hand);
+}
+
 
 //-----------------------All functions below can be compared with highcard()---------------//
 //Straight types
@@ -98,14 +113,7 @@ royal flush
 */
 fn has_straight(hand: &Vec<u32>) -> bool{
     let mut temp = hand[0]%13;
-    //try to put this in the loop
-    if hand[0]%13 == 1{
-        if hand[1]%13 == 10{
-            //Check if it's 10
-        }else if{
-            //if it's 2, continue
-        }
-    }
+   
     for i in 1..5{
         
         if temp+1 == hand[i]%13 {
@@ -157,13 +165,12 @@ fn has_straight_flush(hand: &Vec<u32>) -> bool{
 }
 
 fn has_royal_flush(hand: &Vec<u32>) ->bool{
-    return has_straight_flush(hand);
+    return has_straight_flush(hand)&&(hand[0] == 1)&&(hand[1] == 10);
 }
 
 fn main(){
     let  a = deal([42,2,3,4,5,6,7,8,9,9]);
     println!("{}",a);
     println!("{:?}",highcard([1,14,27,40,52]));
-    println!("{:?}",hasOrder([2,3,15,16,28]));
-    
+    check_match([1,14,27,40,2]);
 }
