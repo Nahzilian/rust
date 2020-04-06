@@ -97,22 +97,33 @@ straight flush
 royal flush
 */
 fn has_straight(hand: &Vec<u32>) -> bool{
-    let mut temp = hand[0]%13;
-    //try to put this in the loop
-    if hand[0]%13 == 1{
-        if hand[1]%13 == 10{
-            //Check if it's 10
-        }else if{
-            //if it's 2, continue
-        }
+
+    let mut valHand = Vec::new(); //New vect to hold the value (number) of the cards
+    for i in 0..5{
+        valHand.push(hand[i]%13);           
     }
+    valHand.sort();
+    for i in 0..5{
+        println!("{} ", valHand[i])
+    }
+    let mut temp = valHand[0];
+
+    if valHand[0]==0 && valHand[1]== 1 //Special case
+    {
+        temp = valHand[2];
+        for i in 3..5{
+            if temp+1 == valHand[i] {
+                temp+=1;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     for i in 1..5{
-<<<<<<< HEAD
-        if temp+1 == arr[i]%13 {
-=======
-        
-        if temp+1 == hand[i]%13 {
->>>>>>> 60d93468efcfcac19d2605f80cbc0e3567c63d0e
+        if temp+1 == valHand[i] {
             temp+=1;
         }else{
             return false;
@@ -126,11 +137,7 @@ fn has_straight(hand: &Vec<u32>) -> bool{
 /*
     Check to see if the hand has flush, if yes return the order of the flush(1 for club 2 for diamond ....) 
 */
-<<<<<<< HEAD
-// fn hasFlush(arr:[u32;5]) -> u32{
-//     let mut arr = a;
-// }
-=======
+
 fn has_flush(hand: &Vec<u32>) -> bool{
     let mut result = true;
     for (i,item1) in hand.iter().enumerate(){
@@ -158,7 +165,7 @@ fn get_suit(card: u32) -> char {
         return 'S';
     }
 }
->>>>>>> 60d93468efcfcac19d2605f80cbc0e3567c63d0e
+
 
 
 /* Function to check if hand has a straight flush */
@@ -171,9 +178,34 @@ fn has_royal_flush(hand: &Vec<u32>) ->bool{
 }
 
 fn main(){
-    let  a = deal([42,2,3,4,5,6,7,8,9,9]);
-    println!("{}",a);
-    println!("{:?}",highcard([1,14,27,40,52]));
-    println!("{:?}",hasOrder([2,3,15,16,28]));
+    // let  a = deal([42,2,3,4,5,6,7,8,9,9]);
+    // println!("{}",a);
+    // println!("{:?}",highcard([1,14,27,40,52]));
+    // println!("{:?}",hasOrder([2,3,15,16,28]));
+
+    let arr = [38,2,50,4,13,6,40,8,41,9];
+    let mut hand1 = Vec::new();
+    let mut hand2 = Vec::new();
+
+
+    for (i,item) in arr.iter().enumerate(){
+        if i%2 == 0{
+            hand1.push(*item);
+        }else{
+            hand2.push(*item);
+        }        
+    }
+    hand1.sort();
+    hand2.sort();
+
+    for i in 0..5{
+        println!("{} ", hand1[i])
+    }
+
+    if has_straight(&hand1) {
+        println!("Hand has a straight\n");
+    } else {
+        println!("Hand does not have a straight\n");
+    }
     
 }
