@@ -96,8 +96,9 @@ straight
 straight flush
 royal flush
 */
-fn has_straight(hand: &Vec<u32>) -> bool{
 
+
+fn has_straight(hand: &Vec<u32>) -> bool{
     let mut valHand = Vec::new(); //New vect to hold the value (number) of the cards
     for i in 0..5{
         valHand.push(hand[i]%13);           
@@ -183,7 +184,7 @@ fn main(){
     // println!("{:?}",highcard([1,14,27,40,52]));
     // println!("{:?}",hasOrder([2,3,15,16,28]));
 
-    let arr = [38,2,50,4,13,6,40,8,41,9];
+    let arr = [3,2,17,4,44,6,19,8,7,9];
     let mut hand1 = Vec::new();
     let mut hand2 = Vec::new();
 
