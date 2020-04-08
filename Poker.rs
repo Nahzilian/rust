@@ -73,22 +73,32 @@ fn check_match(arr:[u32;5]) -> Vec<u32>{
     return result;
 }
 
+fn has_pair(hand: &Vec<u32>) -> bool{
+    return hand.len() == 2;
+}
 
+fn has_three_of_kind(hand: &Vec<u32>) -> bool{
+    return hand.len() == 3;
+}
 
+fn has_two_pairs(hand: &Vec<u32>) -> bool{
+    return hand.len() == 4;
+}
 
-    // This needs to return something else rather than pushing it in the result vector
-    if result.len() == 4{
-        if result[1] + 13 == result[2]{
-            tp.push(4);
-        } else{
-            tp.push(2);
+fn has_four_of_kind(hand: &Vec<u32>) -> bool{
+    let mut check = true;
+    for (i,item1) in hand.iter().enumerate(){
+        for (j,item2) in hand.iter().enumerate(){
+            if *item1 % 13 != *item2 %13{
+               check = false;
+            }
         }
     }
-    return has_two_pair(hand)&& result;
+    return check && has_two_pairs(hand);
 }
 
 fn has_full_house(hand: &Vec<u32>) -> bool{
-    return has_pair(hand) && has_three_of_kind(hand);
+    return hand.len() == 5;
 }
 
 
@@ -190,7 +200,6 @@ fn main(){
     // println!("{:?}",hasOrder([2,3,15,16,28]));
 
     let arr = [3,2,17,4,44,6,19,8,7,9];
->>>>>>> 541afd896c0ccdf7942b2e0456d3082b63cdab36
     let mut hand1 = Vec::new();
     let mut hand2 = Vec::new();
 
@@ -214,9 +223,5 @@ fn main(){
     } else {
         println!("Hand does not have a straight\n");
     }
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 541afd896c0ccdf7942b2e0456d3082b63cdab36
 }
