@@ -19,19 +19,9 @@ fn deal(arr:[u32;10]) -> String{
 
     return buf;
 }
-
-fn winner(arr1:[u32;5],arr2:[u32;5]){
-    let mut winner = 0;
-    if highcard(arr1) > highcard(arr2){
-        winner = 1;
-    }else{
-        winner = 2;
-    }
-    println!("In progress");
-}
 // Winner function:
 //High card             (Gets the highest value?)
-fn highcard(arr:[u32;5]) -> u32{
+fn highcard(arr:&Vec<u32>) -> u32{
     let mut result = 0;
     for (i,item) in arr.iter().enumerate(){
         if *item%13 == 1{
@@ -56,7 +46,7 @@ fn highcard(arr:[u32;5]) -> u32{
 */
 
 
-fn check_match(arr:[u32;5]) -> Vec<u32>{
+fn check_match(arr:&Vec<u32>) -> Vec<u32>{
     let mut result = Vec::new();
     for (i,item1) in arr.iter().enumerate(){
         for (j,item2) in arr.iter().enumerate(){
@@ -192,18 +182,55 @@ fn has_royal_flush(hand: &Vec<u32>) ->bool{
     return has_straight_flush(hand)&&(hand[0] == 1)&&(hand[1] == 10);
 }
 
+/*
+    Checking winner: if 1 => hand 1 win, if 2 => hand 2 win, if tie 3
+*/
+fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
+    let mut a = check_match(hand1);
+    let mut b = check_match(hand2);
+    if has_royal_flush(hand1)&&has_royal_flush(hand2){
+        return 3;
+    }else if has_straight_flush(hand1)&&has_straight_flush(hand2){
+        if highcard(hand1) > highcard(hand2){
+            return 1;
+        }else{
+            return 2;
+        }
+    }else if has_four_of_kind(&a) && has_four_of_kind(&b){
+        return 3; //
+    }else if has_full_house(&a) && has_full_house(&b){
+        return 3;
+    }else if has_flush(hand1) && has_flush(hand2){
+        return 3;
+    }else if has_straight(hand1) && has_straight(hand2){
+        return 3;
+    }else if has_three_of_kind(&a) && has_three_of_kind(&b){
+        return 3;
+    }else if has_two_pairs(&a) && has_two_pairs(&b){
+        return 3;
+    }else if has_pair(&a) && has_pair(&b){
+        return 3;
+    }else{
+        // add when different rank
+        if highcard(hand1) > highcard(hand2){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+}
+
+
 fn main(){
 
     // let  a = deal([42,2,3,4,5,6,7,8,9,9]);
     // println!("{}",a);
     // println!("{:?}",highcard([1,14,27,40,52]));
     // println!("{:?}",hasOrder([2,3,15,16,28]));
-
-    let arr = [3,2,17,4,44,6,19,8,7,9];
     let mut hand1 = Vec::new();
-    let mut hand2 = Vec::new();
+    //let mut hand2 = Vec::new();
 
-
+    /**
     for (i,item) in arr.iter().enumerate(){
         if i%2 == 0{
             hand1.push(*item);
@@ -223,5 +250,16 @@ fn main(){
     } else {
         println!("Hand does not have a straight\n");
     }
+    **/
+
+    hand1.push(1);
+    hand1.push(2);
+    hand1.push(3);
+    hand1.push(4);
+    hand1.push(5);
+
+    
+    println!("{:?}",check_match(&hand1));
+
 
 }
