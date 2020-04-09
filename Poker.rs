@@ -226,10 +226,29 @@ fn has_royal_flush(hand: &Vec<u32>) ->bool{
 
 /* Function to get the ranking */
 fn get_ranking(hand:&Vec<u32>) -> u32
-{
-    if(has_royal_flush(hand))
-    {
+{   
+    let res = check_match(hand);
+
+    if(has_royal_flush(hand)) {
         return 10;
+    } else if (has_straight_flush(hand)) {
+        return 9;
+    } else if (has_four_of_kind(&res)) {
+        return 8;
+    } else if (has_full_house(&res)) {
+        return 7;
+    } else if (has_flush(hand)) {
+        return 6;
+    } else if (has_straight(hand)) {
+        return 5;
+    } else if (has_three_of_kind(&res)) {
+        return 4;
+    } else if (has_two_pairs(&res)) {
+        return 3;
+    } else if (has_pair(&res)) {
+        return 2;
+    } else {
+        return 1;
     }
 }
 
