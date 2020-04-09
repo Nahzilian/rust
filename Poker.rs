@@ -1,9 +1,11 @@
 fn deal(arr:[u32;10]) -> String{
     let mut buf = String::with_capacity("Hand 1 won".len());
+    
+    /* Create growable arrays for hand 1 and hand 2*/ 
     let mut hand1 = Vec::new();
     let mut hand2 = Vec::new();
 
-
+    /* Shuffle between the 2 hands */
     for (i,item) in arr.iter().enumerate(){
         if i%2 == 0{
             hand1.push(*item);
@@ -11,6 +13,8 @@ fn deal(arr:[u32;10]) -> String{
             hand2.push(*item);
         }        
     }
+
+    /* Sort the hand */
     hand1.sort();
     hand2.sort();
 
@@ -19,20 +23,20 @@ fn deal(arr:[u32;10]) -> String{
 
     return buf;
 }
-// Winner function:
-//High card             (Gets the highest value?)
-fn highcard(arr:&Vec<u32>) -> u32{
-    let mut result = 0;
-    for (i,item) in arr.iter().enumerate(){
-        if *item%13 == 1{
-            if result < *item{result = *item;}
-            result = *item
-        }else if result < *item && (result%13 !=1){
-                result = *item;
-            }
-        }        
 
-    println!("{:?}",arr);
+/* This function gets the higest card in the hand */
+fn high_card(hand:&Vec<u32>) -> u32{
+    let mut result = 0;
+    for item in hand.iter(){
+        if *item%13 == 1{
+            if result < *item {result = *item;}
+            result = *item
+        } else if result < *item && (result%13 !=1){
+                result = *item;
+        }
+    }        
+
+    println!("{:?}",hand);
     return result;
 }
 //Has pair
@@ -46,10 +50,11 @@ fn highcard(arr:&Vec<u32>) -> u32{
 */
 
 
+/* This function returns an array of cards that has the same values to reveal possible four of kind, three of a kind, pairs, ... */
 fn check_match(arr:&Vec<u32>) -> Vec<u32>{
     let mut result = Vec::new();
-    for (i,item1) in arr.iter().enumerate(){
-        for (j,item2) in arr.iter().enumerate(){
+    for item1 in arr.iter(){
+        for item2 in arr.iter(){
             if *item1 != *item2{
                 if *item1 % 13 == *item2 % 13{
                     result.push(*item1);
@@ -63,64 +68,68 @@ fn check_match(arr:&Vec<u32>) -> Vec<u32>{
     return result;
 }
 
-fn has_pair(hand: &Vec<u32>) -> bool{
-    return hand.len() == 2;
+
+fn has_pair(result: &Vec<u32>) -> bool{
+    return result.len() == 2;
 }
 
-fn has_three_of_kind(hand: &Vec<u32>) -> bool{
-    return hand.len() == 3;
+fn has_three_of_kind(result: &Vec<u32>) -> bool{
+    return result.len() == 3;
 }
 
-fn has_two_pairs(hand: &Vec<u32>) -> bool{
-    return hand.len() == 4;
+fn has_two_pairs(result: &Vec<u32>) -> bool{
+    return result.len() == 4;
 }
 
-fn has_four_of_kind(hand: &Vec<u32>) -> bool{
+fn has_four_of_kind(result: &Vec<u32>) -> bool{
     let mut check = true;
-    for (i,item1) in hand.iter().enumerate(){
-        for (j,item2) in hand.iter().enumerate(){
+    for item1 in result.iter(){
+        for item2 in result.iter(){
             if *item1 % 13 != *item2 %13{
                check = false;
             }
         }
     }
-    return check && has_two_pairs(hand);
+    return check && has_two_pairs(result);
 }
 
-fn has_full_house(hand: &Vec<u32>) -> bool{
-    return hand.len() == 5;
+fn has_full_house(result: &Vec<u32>) -> bool{
+    return result.len() == 5;
 }
 
 
-fn compare_set(hand: &Vec<u32>,hand: &Vec<u32>) -> u32{
-    if hand1.len() == 2 && hand1.len() == 2{
-        if highcard(hand1)>highcard(hand2){
+
+
+fn compare_set(hand1: &Vec<u32>,hand2: &Vec<u32>) -> u32{
+    if hand1.len() == 2 && hand2.len() == 2{
+        if high_card(hand1)>high_card(hand2){
             return 1
         }else{
             return 2
         }
-    }else if hand.len() == 3 && hand1.len() == 3{
-        if highcard(hand1)>highcard(hand2){
+    }else if hand1.len() == 3 && hand2.len() == 3{
+        if high_card(hand1)>high_card(hand2){
             return 1
         }else{
             return 2
         }
-    }else if hand.len() == 4 && hand1.len() == 4{
-        if highcard(hand1)>highcard(hand2){
+    }else if hand1.len() == 4 && hand2.len() == 4{
+        if high_card(hand1)>high_card(hand2){
             return 1
         }else{
             return 2
         }
-    }else if hand.len() == 5 && hand1.len() == 5{
-        if highcard(hand1)>highcard(hand2){
+    }else if hand1.len() == 5 && hand2.len() == 5{
+        if high_card(hand1)>high_card(hand2){
             return 1
         }else{
             return 2
         }
     }
+    return 0;
 }
 
-//-----------------------All functions below can be compared with highcard()---------------//
+//-----------------------All functions below can be compared with high_card()---------------//
 //Straight types
 /*
 This includes:
@@ -131,21 +140,21 @@ royal flush
 
 
 fn has_straight(hand: &Vec<u32>) -> bool{
-    let mut valHand = Vec::new(); //New vect to hold the value (number) of the cards
+    let mut val_hand = Vec::new(); //New vect to hold the value (number) of the cards
     for i in 0..5{
-        valHand.push(hand[i]%13);           
+        val_hand.push(hand[i]%13);           
     }
-    valHand.sort();
+    val_hand.sort();
     for i in 0..5{
-        println!("{} ", valHand[i])
+        println!("{} ", val_hand[i])
     }
-    let mut temp = valHand[0];
+    let mut temp = val_hand[0];
 
-    if valHand[0]==0 && valHand[1]== 1 //Special case
+    if val_hand[0]==0 && val_hand[1]== 1 //Special case
     {
-        temp = valHand[2];
+        temp = val_hand[2];
         for i in 3..5{
-            if temp+1 == valHand[i] {
+            if temp+1 == val_hand[i] {
                 temp+=1;
             }else{
                 return false;
@@ -156,7 +165,7 @@ fn has_straight(hand: &Vec<u32>) -> bool{
 
 
     for i in 1..5{
-        if temp+1 == valHand[i] {
+        if temp+1 == val_hand[i] {
             temp+=1;
         }else{
             return false;
@@ -173,8 +182,8 @@ fn has_straight(hand: &Vec<u32>) -> bool{
 
 fn has_flush(hand: &Vec<u32>) -> bool{
     let mut result = true;
-    for (i,item1) in hand.iter().enumerate(){
-        for(i,item2)in hand.iter().enumerate(){
+    for item1 in hand.iter(){
+        for item2 in hand.iter(){
             if get_suit(*item1) != get_suit(*item2) {
                 result = false;
             }
@@ -207,12 +216,25 @@ fn has_straight_flush(hand: &Vec<u32>) -> bool{
 }
 
 fn has_royal_flush(hand: &Vec<u32>) ->bool{
-    return has_straight_flush(hand)&&(hand[0] == 1)&&(hand[1] == 10);
+    return has_straight_flush(hand)&&(hand[0]%13 == 1);
 }
 
 /*
     Checking winner: if 1 => hand 1 win, if 2 => hand 2 win, if tie 3
 */
+
+
+/* Function to get the ranking */
+fn get_ranking(hand:&Vec<u32>) -> u32
+{
+    if(has_royal_flush(hand))
+    {
+        return 10;
+    }
+}
+
+
+
 
 fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
     let mut a = check_match(hand1);
@@ -220,7 +242,7 @@ fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
     if has_royal_flush(hand1)&&has_royal_flush(hand2){
         return 3;
     }else if has_straight_flush(hand1)&&has_straight_flush(hand2){
-        if highcard(hand1) > highcard(hand2){
+        if high_card(hand1) > high_card(hand2){
             return 1;
         }else{
             return 2;
@@ -231,14 +253,14 @@ fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
         return compare_set(&a,&b);
     }else if has_flush(hand1) && has_flush(hand2){
         // check ranking of the card
-        if highcard(hand1) > highcard(hand2){
+        if high_card(hand1) > high_card(hand2){
             return 1;
         }else{
             return 2;
         }
     }else if has_straight(hand1) && has_straight(hand2){
 
-        if highcard(hand1) > highcard(hand2){
+        if high_card(hand1) > high_card(hand2){
             return 1;
         }else{
             return 2;
@@ -251,7 +273,7 @@ fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
         return compare_set(&a,&b);
     }else{
         // add when different rank
-        if highcard(hand1) > highcard(hand2){
+        if high_card(hand1) > high_card(hand2){
             return 1;
         }else{
             return 2;
@@ -264,12 +286,12 @@ fn main(){
 
     // let  a = deal([42,2,3,4,5,6,7,8,9,9]);
     // println!("{}",a);
-    // println!("{:?}",highcard([1,14,27,40,52]));
+    // println!("{:?}",high_card([1,14,27,40,52]));
     // println!("{:?}",hasOrder([2,3,15,16,28]));
     let mut hand1 = Vec::new();
     //let mut hand2 = Vec::new();
 
-    /**
+    /*
     for (i,item) in arr.iter().enumerate(){
         if i%2 == 0{
             hand1.push(*item);
@@ -289,16 +311,20 @@ fn main(){
     } else {
         println!("Hand does not have a straight\n");
     }
-    **/
+    */
 
-    hand1.push(1);
-    hand1.push(2);
-    hand1.push(3);
-    hand1.push(4);
-    hand1.push(5);
+    hand1.push(14);
+    hand1.push(23);
+    hand1.push(24);
+    hand1.push(25);
+    hand1.push(26);
 
-    
-    println!("{:?}",check_match(&hand1));
+    let res = check_match(&hand1);
+    println!("{:?}", res);
+
+    println!("{}", has_royal_flush(&hand1));
+
+    println!("{:?}",high_card(&hand1));
 
 
 }
