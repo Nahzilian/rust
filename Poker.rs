@@ -92,6 +92,34 @@ fn has_full_house(hand: &Vec<u32>) -> bool{
 }
 
 
+fn compare_set(hand: &Vec<u32>,hand: &Vec<u32>) -> u32{
+    if hand1.len() == 2 && hand1.len() == 2{
+        if highcard(hand1)>highcard(hand2){
+            return 1
+        }else{
+            return 2
+        }
+    }else if hand.len() == 3 && hand1.len() == 3{
+        if highcard(hand1)>highcard(hand2){
+            return 1
+        }else{
+            return 2
+        }
+    }else if hand.len() == 4 && hand1.len() == 4{
+        if highcard(hand1)>highcard(hand2){
+            return 1
+        }else{
+            return 2
+        }
+    }else if hand.len() == 5 && hand1.len() == 5{
+        if highcard(hand1)>highcard(hand2){
+            return 1
+        }else{
+            return 2
+        }
+    }
+}
+
 //-----------------------All functions below can be compared with highcard()---------------//
 //Straight types
 /*
@@ -185,6 +213,7 @@ fn has_royal_flush(hand: &Vec<u32>) ->bool{
 /*
     Checking winner: if 1 => hand 1 win, if 2 => hand 2 win, if tie 3
 */
+
 fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
     let mut a = check_match(hand1);
     let mut b = check_match(hand2);
@@ -197,19 +226,29 @@ fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
             return 2;
         }
     }else if has_four_of_kind(&a) && has_four_of_kind(&b){
-        return 3; //
+        return compare_set(&a,&b);
     }else if has_full_house(&a) && has_full_house(&b){
-        return 3;
+        return compare_set(&a,&b);
     }else if has_flush(hand1) && has_flush(hand2){
-        return 3;
+        // check ranking of the card
+        if highcard(hand1) > highcard(hand2){
+            return 1;
+        }else{
+            return 2;
+        }
     }else if has_straight(hand1) && has_straight(hand2){
-        return 3;
+
+        if highcard(hand1) > highcard(hand2){
+            return 1;
+        }else{
+            return 2;
+        }
     }else if has_three_of_kind(&a) && has_three_of_kind(&b){
-        return 3;
+        return compare_set(&a,&b);
     }else if has_two_pairs(&a) && has_two_pairs(&b){
-        return 3;
+        return compare_set(&a,&b);
     }else if has_pair(&a) && has_pair(&b){
-        return 3;
+        return compare_set(&a,&b);
     }else{
         // add when different rank
         if highcard(hand1) > highcard(hand2){
