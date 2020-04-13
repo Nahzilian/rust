@@ -36,7 +36,7 @@ fn high_card(hand:&Vec<u32>) -> u32{
         }
     }        
 
-    println!("{:?}",hand);
+    //println!("{:?}",hand);
     return result;
 }
 //Has pair
@@ -68,6 +68,28 @@ fn check_match(arr:&Vec<u32>) -> Vec<u32>{
     return result;
 }
 
+fn split_full_house(arr:&Vec<u32>) -> Vec<u32>{
+    let mut first = Vec::new();
+    let mut second = Vec::new();
+    let a = arr[0];
+    for i in arr.iter(){
+        if *i % 13 != a % 13{
+            first.push(i);
+        }else{
+            second.push(i);
+        }
+    }
+}
+
+fn get_top(arr:&Vec<u32>) -> {
+    let mut res = 0;
+    for i in arr.iter(){
+        if res < *i%13{
+            res = *i%13;
+        }
+    }
+    return res;
+}
 
 fn has_pair(result: &Vec<u32>) -> bool{
     return result.len() == 2;
@@ -97,9 +119,16 @@ fn has_full_house(result: &Vec<u32>) -> bool{
     return result.len() == 5;
 }
 
+// Compare set for 2 pairs
+
+// compare largest
+//compare second largest
+// compare rank
 
 
-
+fn compare_pairs(hand1: &Vec<u32>,hand2: &Vec<u32>) -> u32{
+    
+}
 fn compare_set(hand1: &Vec<u32>,hand2: &Vec<u32>) -> u32{
     if hand1.len() == 2 && hand2.len() == 2{ //Fix this
         if high_card(hand1)>high_card(hand2){
@@ -116,13 +145,20 @@ fn compare_set(hand1: &Vec<u32>,hand2: &Vec<u32>) -> u32{
         }else{
             return 2
         }
+<<<<<<< HEAD
     } else if hand1.len() == 4 && hand2.len() == 4{ //2 possibilities: 4 of a kind or 2 pairs
         if (hand1[0]%13==hand1[3]%13) && (hand2[0]%13==hand2[3]%13) { //Check for 4 of a kind
+=======
+    }else if hand1.len() == 4 && hand2.len() == 4{
+        //another if statement
+        if (!has_four_of_kind(hand1))&&has_two_pairs(hand1)&&(!has_four_of_kind(hand2))&&has_two_pairs(hand2){
+>>>>>>> b1559d7ff473a824b762728c0aca59954fcc4a1c
             if high_card(hand1)>high_card(hand2){
                 return 1
             }else{
                 return 2
             }
+<<<<<<< HEAD
         // } else if (hand1[0]%13==hand1[1]%13 && hand1[2]%13==hand1[3]%13 && hand1[0]%13!=hand1[2]%13) && (hand2[0]%13==hand2[1]%13 && hand2[2]%13==hand2[3]%13 && hand2[0]%13!=hand2[2]%13) { //Check for 2 pairs on each hand
         //     //Add the highest value of each pair from hand 1 to array
         //     let arr1 = Vec::new();
@@ -152,6 +188,14 @@ fn compare_set(hand1: &Vec<u32>,hand2: &Vec<u32>) -> u32{
         let t2 = get_three(hand2);
 
         if t1>t2{
+=======
+        }else if has_four_of_kind(hand1)&&!has_two_pairs(hand1)&&(!has_four_of_kind(hand2))&&has_two_pairs(hand2){
+            return compare_pairs(hand1,hand2);
+        }
+        
+    }else if hand1.len() == 5 && hand2.len() == 5{
+        if high_card(hand1)>high_card(hand2){
+>>>>>>> b1559d7ff473a824b762728c0aca59954fcc4a1c
             return 1
         }else{
             return 2
@@ -189,7 +233,10 @@ fn has_straight(hand: &Vec<u32>) -> bool{
         val_hand.push(hand[i]%13);           
     }
     val_hand.sort();
+<<<<<<< HEAD
     
+=======
+>>>>>>> b1559d7ff473a824b762728c0aca59954fcc4a1c
     let mut temp = val_hand[0];
 
     if val_hand[0]==0 && val_hand[1]== 1 //Special case (King,Ace,...)
@@ -269,6 +316,7 @@ fn get_ranking(hand:&Vec<u32>) -> u32
 {   
     let res = check_match(hand);            //Array that store the cards in sets from check_match
 
+<<<<<<< HEAD
     if(has_royal_flush(hand)) {             //Royal flush
         return 10;
     } else if (has_straight_flush(hand)) {  //Straight flush
@@ -286,6 +334,25 @@ fn get_ranking(hand:&Vec<u32>) -> u32
     } else if (has_two_pairs(&res)) {       //2 pairs
         return 3;
     } else if (has_pair(&res)) {            //1 pair
+=======
+    if has_royal_flush(hand) {
+        return 10;
+    } else if has_straight_flush(hand) {
+        return 9;
+    } else if has_four_of_kind(&res) {
+        return 8;
+    } else if has_full_house(&res) {
+        return 7;
+    } else if has_flush(hand) {
+        return 6;
+    } else if has_straight(hand) {
+        return 5;
+    } else if has_three_of_kind(&res) {
+        return 4;
+    } else if has_two_pairs(&res) {
+        return 3;
+    } else if has_pair(&res) {
+>>>>>>> b1559d7ff473a824b762728c0aca59954fcc4a1c
         return 2;
     } else {                                //High card
         return 1;
@@ -327,6 +394,7 @@ fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
 
 
 
+<<<<<<< HEAD
     if has_royal_flush(hand1)&&has_royal_flush(hand2){
         return 3;
     }else if has_straight_flush(hand1)&&has_straight_flush(hand2){
@@ -347,25 +415,64 @@ fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
             return 2;
         }
     }else if has_straight(hand1) && has_straight(hand2){
+=======
+fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
+    let mut a = check_match(hand1);
+    let mut b = check_match(hand2);
+    if get_ranking(&hand1) > get_ranking(&hand2){
+        return 1;
+    }else if get_ranking(&hand1) == get_ranking(&hand2){
+        if has_royal_flush(hand1)&&has_royal_flush(hand2){
+            if high_card(hand1) > high_card(hand2){
+                return 1;
+            }else{
+                return 2;
+            }
+        }else if has_straight_flush(hand1)&&has_straight_flush(hand2){
+            if high_card(hand1) > high_card(hand2){
+                return 1;
+            }else{
+                return 2;
+            }
+        }else if has_four_of_kind(&a) && has_four_of_kind(&b){
+            return compare_set(&a,&b);
+        }else if has_full_house(&a) && has_full_house(&b){
+            return compare_set(&a,&b);
+        }else if has_flush(hand1) && has_flush(hand2){
+            if get_ranking(&hand1) > get_ranking(&hand2){
+                return 1;
+            }else{
+                return 2;
+            }
+            if high_card(hand1) > high_card(hand2){
+                return 1;
+            }else{
+                return 2;
+            }
+        }else if has_straight(hand1) && has_straight(hand2){
+>>>>>>> b1559d7ff473a824b762728c0aca59954fcc4a1c
 
-        if high_card(hand1) > high_card(hand2){
-            return 1;
+            if high_card(hand1) > high_card(hand2){
+                return 1;
+            }else{
+                return 2;
+            }
+        }else if has_three_of_kind(&a) && has_three_of_kind(&b){
+            return compare_set(&a,&b);
+        }else if has_two_pairs(&a) && has_two_pairs(&b){
+            return compare_set(&a,&b);
+        }else if has_pair(&a) && has_pair(&b){
+            return compare_set(&a,&b);
         }else{
-            return 2;
+            if high_card(hand1) > high_card(hand2){
+                return 1;
+            }else{
+                return 2;
+            }
         }
-    }else if has_three_of_kind(&a) && has_three_of_kind(&b){
-        return compare_set(&a,&b);
-    }else if has_two_pairs(&a) && has_two_pairs(&b){
-        return compare_set(&a,&b);
-    }else if has_pair(&a) && has_pair(&b){
-        return compare_set(&a,&b);
+        
     }else{
-        // add when different rank
-        if high_card(hand1) > high_card(hand2){
-            return 1;
-        }else{
-            return 2;
-        }
+        return 2;
     }
 }*/
 
@@ -436,14 +543,25 @@ fn get_three(arr:&Vec<u32>) -> u32{
 }
 
 
+fn convert(hand:&Vec<u32>){
+    let mut result = "a"
+    return result;
+}
+
+
 fn main(){
 
     // let  a = deal([42,2,3,4,5,6,7,8,9,9]);
     // println!("{}",a);
     // println!("{:?}",high_card([1,14,27,40,52]));
     // println!("{:?}",hasOrder([2,3,15,16,28]));
+<<<<<<< HEAD
     //let mut hand1 = Vec::new();
     //let mut hand2 = Vec::new();
+=======
+    let mut hand1 = Vec::new();
+    let mut hand2 = Vec::new();
+>>>>>>> b1559d7ff473a824b762728c0aca59954fcc4a1c
 
     /*
     for (i,item) in arr.iter().enumerate(){
@@ -466,6 +584,7 @@ fn main(){
         println!("Hand does not have a straight\n");
     }
     */
+<<<<<<< HEAD
 
     // hand1.push(1);
     // hand1.push(2);
@@ -490,5 +609,30 @@ fn main(){
 
     //println!("{:?}",high_card(&hand1));
 
+=======
+    //Royal fl
+    hand1.push(1);
+    hand1.push(10);
+    hand1.push(11);
+    hand1.push(12);
+    hand1.push(13);
+    // Straight fl
+    hand2.push(14);
+    hand2.push(15);
+    hand2.push(16);
+    hand2.push(17);
+    hand2.push(18);
+    //let res = check_match(&hand1);
+    //println!("{:?}", res);
+
+    //println!("{}", has_royal_flush(&hand1));
+
+    //println!("{:?}",high_card(&hand1));
+
+    println!("{}",winner(&hand1,&hand2));
+    println!("Hand2 checking");
+    println!("{}",get_ranking(&hand2));// hand 1 is the winner
+    //println!("{}",has_royal_flush(&hand2));
+>>>>>>> b1559d7ff473a824b762728c0aca59954fcc4a1c
 
 }
