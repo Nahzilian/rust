@@ -52,6 +52,11 @@ TRICK: xxxyz   or yxxxz    or yzxxx
 get third index.
 
 + 2 Pair
+Pattern
+zxxyy
+xxzyy
+xxyyz
+
 
 + 1 Pair
 
@@ -74,8 +79,8 @@ fn sort_cards(arr:&mut Vec<u32>){
     while swapped {
         swapped = false; //If there are no changes, array is sorted.
         for i in 1..arr.len() {
-            let mut a = get_rank(arr[i-1]);
-            let mut b = get_rank(arr[i]);
+            let a = get_rank(arr[i-1]);
+            let b = get_rank(arr[i]);
             
             if a > b { //a has higher rank than b
                 arr.swap(i-1, i);
@@ -184,6 +189,8 @@ fn has_flush(hand: &Vec<u32>) -> bool{
     return true;
 }
 
+
+
 /* Helper function to get the suit of a card */
 fn get_suit(card: u32) -> u32 {
     if card <= 13 {        //Clubs  
@@ -210,28 +217,29 @@ fn has_royal_flush(hand: &Vec<u32>) ->bool{
 /* Function returns the ranking of a hand */
 fn get_hand_ranking(hand:&Vec<u32>) -> u32
 {   
+    //hand.sort();
     let res = check_match(hand); //Array that store the cards in sets from check_match
     // res is input for four/three of a kind, full house, 2 pairs, pair
 
-    if(has_royal_flush(hand)) {             //Royal flush
+    if has_royal_flush(hand) {             //Royal flush
         return 10;
-    } else if (has_straight_flush(hand)) {  //Straight flush
+    } else if has_straight_flush(hand) {  //Straight flush
         return 9;
-    } else if (has_four_of_kind(&res)) {    //4 of a kind
+    } else if has_four_of_kind(&res) {    //4 of a kind
         return 8;
-    } else if (has_full_house(&res)) {      //Full house
+    } else if has_full_house(&res) {      //Full house
         return 7;
-    } else if (has_flush(hand)) {           //Flush
+    } else if has_flush(hand) {           //Flush
         return 6;
-    } else if (has_straight(hand)) {        //Straight
+    } else if has_straight(hand) {        //Straight
         return 5;
-    } else if (has_three_of_kind(&res)) {   //3 of a kind
+    } else if has_three_of_kind(&res) {   //3 of a kind
         return 4;
-    } else if (has_two_pairs(&res)) {       //2 pairs
+    } else if has_two_pairs(&res) {       //2 pairs
         return 3;
-    } else if (has_pair(&res)) {            //1 pair
+    } else if has_pair(&res) {            //1 pair
         return 2;
-    } else {                                //High card
+    } else {                              //High card
         return 1;
     }
 }
@@ -360,13 +368,15 @@ fn compare_by_rank(card1:u32, card2:u32) -> u32
  fn compare_by_suit(card1:u32, card2:u32) -> u32
  {
      // Get the suit 
-     let mut val1 = get_suit(card1);
-     let mut val2 = get_suit(card2);
+     let val1 = get_suit(card1);
+     let val2 = get_suit(card2);
  
      if val1>val2 {1}
      else if val1<val2 {2}
      else {3}
  }
+
+ fn get_kicker(&hand:Vec<u32>)
 /*
 fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
     let rank1 = get_hand_ranking(hand1); //Get the rankings
@@ -401,15 +411,6 @@ fn winner(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{
     }
 }*/
 
-/* Helper function that compares the highest card (the one at the end of array)
- * Return 1 if hand 1 is higher, 2 otherwise */
-fn compare_highest(hand1:&Vec<u32>,hand2:&Vec<u32>) -> u32{   //questionable ????
-    if hand1[4] > hand2[4] { //Compare the highest 
-        return 1;
-    } else {
-        return 2;
-    }
-}
 
 
 fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
@@ -419,20 +420,21 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
     sort_cards(hand1);
     sort_cards(hand2);
 
-    let set1 = check_match(hand1); //Results from check_match
-    let set2 = check_match(hand2);
+    let mut set1 = check_match(hand1); //Results from check_match
+    let mut set2 = check_match(hand2);
 
     println!("The rank of hand 1 is:{}", get_hand_ranking(hand1));
 
 
-    if (rank1>rank2) {         //Hand 1 has higher ranking
+    if rank1>rank2 {         //Hand 1 has higher ranking
         return 1;
-    } else if (rank1<rank2) {  //Hand 2 has higher ranking
+    } else if rank1<rank2 {  //Hand 2 has higher ranking
         return 2;
     } else { //Tie breaking begins when they have same ranking
         if rank1 == 10 { //Royal Flush - Compare the highest cards
-            return compare_highest(hand1, hand2);
-        } else if rank1 == 9 { //Straight flush - Compare highest cards
+            //If both are royal flushes, the highest cards are Aces so we would compare and get the highest suit
+            return compare_by_suit(hand1[4],hand2[4]);
+        } else if rank1 == 9 || rank1 == 5 { //Straight flush or flush - Compare highest cards
             
             //Variables to store results
             //Defaults to last card in sorted hand
@@ -454,23 +456,75 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
             }
             return res;
 
-        } else if (rank1 == 8) { //4 of a kind - Compare and find the higher four
+        } else if rank1 == 8 { //4 of a kind - Compare and find the higher four
             return compare_set(hand1, hand2);
-        } else if (rank1 == 7) { //Full house - Compare and find the higher 3 of a kind in the hand
+        } else if rank1 == 7 { //Full house - Compare and find the higher 3 of a kind in the hand
             return compare_set(hand1, hand2);
-        } else if (rank1 == 6) { //Flush - Compare highest, then second highest, ...
-            let mut res = 0;
+        } else if rank1 == 6 { //Flush - Compare highest, then second highest, ...
+            let mut res;
             for i in (0..5).rev(){ //Compare by rank
                 println!("LOOP: {}", i);
                 res = compare_by_rank(hand1[i],hand2[i]);
-                if res != 3 { return res}
+                if res != 3 {return res} //If they are not equal, return winning hand
             }
             
+            //If both hands have the same ranks, then compare the suit of highest card
             res = compare_by_suit(hand1[4],hand2[4]);
             return res;
+        } else if rank1 == 4 { //3 of a kind - Compare and find the higher 3 of a kind in the hand
+            return compare_set(hand1, hand2);
+        } else if rank1 == 3 { //2 pairs - Compare rank of higher pair -> compare rank of other pair -> Compare rank of kicker -> Compare suits of higher pair
+            /*=============================================== NEED IMPLEMENTATION ============================================*/
+            
+            //Sort the set
+            sort_cards(&mut set1);
+            sort_cards(&mut set2);
+
+            //Kicker cards for each hand
+            let mut kicker1 = 0;
+            let mut kicker2 = 0;
+
+            //Get the highest cards of each pair at index 1 and 3 since the pairs are sorted.
+            //Note that these values are sorted so they are the highest value in the pair which can be used for suit comparison
+            let high1 = set1[1]; //Higher pair
+            let low1 = set1[3]; //Lower pair
+
+            let high2 = set2[1]; //Higher pair
+            let low2 = set2[3]; //Lower pair
+
+            //3 Patterns can be seen when the hand is sorted where x's and y's represents the rank of each pair and z is the kicker card
+            if get_rank(arr[0]) == get_rank(arr[1]) && get_rank(arr[2]) == get_rank(arr[3]){
+                // xxyyz
+                kicker = arr[4];
+            } else if get_rank(arr[0]) == get_rank(arr[1]) && get_rank(arr[3]) == get_rank(arr[4]){
+                // xxzyy
+                kicker = arr[2];
+            } else if get_rank(arr[1]) == get_rank(arr[2]) && get_rank(arr[3]) == get_rank(arr[4]){
+                // zxxyy
+                kicker = arr[0];
+            }
+
+            println!("The pairs are {}, {}, and the kicker is {}", num1, num2, kicker);
+            return 0;
+
+
+        } else if rank1 == 2 { //1 pair - Compare rank of pair -> compare rank of remaining cards from highest to lowest -> Compare suits of pair
+            /*=============================================== NEED IMPLEMENTATION ============================================*/
+            return 0;
+
+
         } 
-        else {
-        return 1000;
+        else { //Compare highest card, then second highest and so on -> If all equal the compare the rank of highest card
+            let mut res;
+            for i in (0..5).rev(){ //Compare by rank
+                println!("LOOP: {}", i);
+                res = compare_by_rank(hand1[i],hand2[i]);
+                if res != 3 {return res} //If they are not equal, return winning hand
+            }
+            
+            //If both hands have the same ranks, then compare the suit of highest card
+            res = compare_by_suit(hand1[4],hand2[4]);
+            return res;
         }
     }
 }
@@ -478,24 +532,64 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
 fn main(){
     //let mut hand1 = vec![14,24,25,26,23];
 
-    let mut hand1 = vec![3,5,7,8,9];
-    let mut hand2 = vec![16,22,20,18,21];
+    // let mut hand1 = vec![1,2,16,30,18];
+    // let mut hand2 = vec![14,15,3,17,44];
 
-    println!("The rank of hand 1 is:{}", get_hand_ranking(&hand1));
-    println!("The rank of hand 2 is:{}", get_hand_ranking(&hand2));
+    // println!("The rank of hand 1 is:{}", get_hand_ranking(&hand1));
+    // println!("The rank of hand 2 is:{}", get_hand_ranking(&hand2));
+
+    // println!("The winner is:{}", winner(&mut hand1, &mut hand2));
 
 
-    /* Sort the hand */
-    
+    let mut arr = vec![29,16,35,2,1];
+    sort_cards(&mut arr);
+    println!("{:?}", arr);
 
-    println!("The winner is:{}", winner(&mut hand1, &mut hand2));
+    let mut res = check_match(&arr);
+    sort_cards(&mut res);
 
-    // for i in (0..5).rev(){
-    //     println!("{}", i);
+    // let num1 = res[1];
+    // let num2 = res[3];
+
+
+    /* 
+    zxxyy
+    xxzyy
+    xxyyz
+    */
+
+    //2 Pairs implementation 
+
+    // let mut kicker = 0;
+    // if get_rank(arr[0]) == get_rank(arr[1]) && get_rank(arr[2]) == get_rank(arr[3]){
+    //     // xxyyz
+    //     kicker = arr[4];
+    // } else if get_rank(arr[0]) == get_rank(arr[1]) && get_rank(arr[3]) == get_rank(arr[4]){
+    //     // xxzyy
+    //     kicker = arr[2];
+    // } else if get_rank(arr[1]) == get_rank(arr[2]) && get_rank(arr[3]) == get_rank(arr[4]){
+    //     // zxxyy
+    //     kicker = arr[0];
     // }
 
-    //let mut res = check_match(&hand1);
-    //println!("{:?}", hand1);
+    // println!("The pairs are {}, {}, and the kicker is {}", num1, num2, kicker);
+
+
+    //Array to store the remaining cards 
+    let mut kickers = Vec::new();
+    
+    let num3 = res[1];
+
+    for i in 0..5{
+        if arr[i]%13 != num3%13 {
+            kickers.push(arr[i]);
+        }
+    }
+    
+    
+    
+    sort_cards(&mut kickers);
+    println!("The pair is {} and the remaining cards from high to low is {}, {}, {}", num3, kickers[2], kickers[1], kickers[0]);
 }
 
 
