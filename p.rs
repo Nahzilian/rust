@@ -184,6 +184,18 @@ fn has_flush(hand: &Vec<u32>) -> bool{
     return true;
 }
 
+/*
+fn has_flush(hand: &Vec<u32>) -> bool{
+    let mut temp = get_suit(hand[0]);
+    let mut res = true;
+    for i in 1..5{
+        if temp != get_suit(hand[i]){
+            res = false;
+        }
+    }
+    return res;
+}
+*/
 /* Helper function to get the suit of a card */
 fn get_suit(card: u32) -> u32 {
     if card <= 13 {        //Clubs  
@@ -478,8 +490,8 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
 fn main(){
     //let mut hand1 = vec![14,24,25,26,23];
 
-    let mut hand1 = vec![3,5,7,8,9];
-    let mut hand2 = vec![16,22,20,18,21];
+    let mut hand1 = vec![1,2,16,30,18];
+    let mut hand2 = vec![14,15,3,17,44];
 
     println!("The rank of hand 1 is:{}", get_hand_ranking(&hand1));
     println!("The rank of hand 2 is:{}", get_hand_ranking(&hand2));
@@ -494,6 +506,8 @@ fn main(){
     //     println!("{}", i);
     // }
 
+     let mut hand = vec![1,4,7,8,9];
+     println!("{}",has_flush(&hand));
     //let mut res = check_match(&hand1);
     //println!("{:?}", hand1);
 }
