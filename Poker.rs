@@ -263,7 +263,54 @@ fn has_straight(hand: &Vec<u32>) -> bool{
     return true;
 }
 
+fn convert_mod(hand: &Vec<u32>)-Vec<u32>{
+    let result = Vec::new();
+    for i in hand.iter(){
+        result.push(*i % 13);
+    }
+    result.sort();
+    return result; 
+}
 
+fn filter(hand: &Vec<u32>,temp: &Vec<u32>){
+    let mut result = 0;
+    for i in hand.iter(){
+        if *i % 13 != temp[0] || *i % 13 != temp[1]{
+            result = *i;
+        } 
+    }
+    return result;
+}
+
+fn compare_pairs_new(hand1: &Vec<u32>,hand2: &Vec<u32>) -> u32{
+    let mut temp1 = convert_mod(check_match(hand1));
+    let mut temp2 = convert_mod(check_match(hand2));    
+    // compare highest
+    if temp1[3] > temp2[3]{
+        return 1;
+    }else if temp1[3] < temp2[3]{
+        return 2;
+    }else{
+        if temp1[1] > temp2[1]{
+            return 1;
+        }else if temp1[1] < temp2[1]{
+            return 2;
+        }else{
+            // fix
+            if filter(hand1,temp1.dedup()) % 13 > filter(hand2,temp2.dedup()) % 13{
+                return 1;
+            }else if filter(hand1,temp1.dedup()) % 13 < filter(hand2,temp2.dedup()) % 13{
+                return 2;
+            }else{
+                if high_card(hand1) > high_card(hand2){
+                    return 1;
+                }else{
+                    return 2;
+                }
+            }
+        }
+    }
+}
 //Flush
 /* Check to see if the hand has flush, if yes return the order of the flush(1 for club 2 for diamond ....) */
 fn has_flush(hand: &Vec<u32>) -> bool{
