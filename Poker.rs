@@ -184,7 +184,7 @@ fn main(){
     // println!("{:?}",highcard([1,14,27,40,52]));
     // println!("{:?}",hasOrder([2,3,15,16,28]));
 
-    let arr = [3,2,17,4,44,6,19,8,7,9];
+    let arr:[u32;10] = [3,2,17,4,44,6,19,8,7,9];
     let mut hand1 = Vec::new();
     let mut hand2 = Vec::new();
 
