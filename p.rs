@@ -458,17 +458,16 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
             return compare_set(hand1, hand2);
         } else if (rank1 == 7) { //Full house - Compare and find the higher 3 of a kind in the hand
             return compare_set(hand1, hand2);
-        } 
-        else if (rank1 == 6) { //Flush - Compare highest, then second highest, ...
+        } else if (rank1 == 6) { //Flush - Compare highest, then second highest, ...
             let mut res = 0;
             for i in (0..5).rev(){ //Compare by rank
-                println("LOOP: {}", i);
+                println!("LOOP: {}", i);
                 res = compare_by_rank(hand1[i],hand2[i]);
                 if res != 3 { return res}
             }
             
-
-
+            res = compare_by_suit(hand1[4],hand2[4]);
+            return res;
         } 
         else {
         return 1000;
@@ -479,8 +478,8 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
 fn main(){
     //let mut hand1 = vec![14,24,25,26,23];
 
-    let mut hand1 = vec![10,11,12,13,1];
-    let mut hand2 = vec![27,28,29,30,31];
+    let mut hand1 = vec![3,5,7,8,9];
+    let mut hand2 = vec![16,22,20,18,21];
 
     println!("The rank of hand 1 is:{}", get_hand_ranking(&hand1));
     println!("The rank of hand 2 is:{}", get_hand_ranking(&hand2));
