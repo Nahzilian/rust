@@ -77,24 +77,24 @@ fn high_card(hand:&Vec<u32>) -> u32{
     return result;
 }
 
-fn convert(hand:&Vec<u32>) -> Vec<u32>{
-    let mut res= Vec::new();
+fn convert(hand:&mut Vec<u32>){
     for i in hand.iter(){
-        res.push(*i % 13);
+        //res.push(*i % 13);
+        *hand[i] = *hand[i]%13;
     }
-    res.sort();
-    return res;
+    hand.sort();
 }
 
 
 fn get_high(hand:&Vec<u32>) -> u32{
     let mut result = 0;
-    let mut converted = convert(hand).dedup();
+    //let mut converted = convert(hand).dedup();
+    convert(mut hand).dedup();
     let mut val;
-    if converted[0] == 1{
-        val = converted[0];
+    if converted.0 == 1{
+        val = converted.0;
     }else{
-        val = converted[converted.len()-1];
+        val = converted[converted.len-1];
     }
     
     for item in hand.iter(){
@@ -414,7 +414,9 @@ fn main(){
 
 
     //let res1 = get_three(&hand1);
-    println!("{}", high_card(&hand1));
+    println!("{}", get_high(&hand1));
+
+    
     //println!("{}", high_card(hand2));
 
     //let arr1 = check_match(&hand1);

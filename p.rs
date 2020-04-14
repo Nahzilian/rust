@@ -190,6 +190,18 @@ fn has_flush(hand: &Vec<u32>) -> bool{
 }
 
 
+/*
+fn has_flush(hand: &Vec<u32>) -> bool{
+    let mut temp = get_suit(hand[0]);
+    let mut res = true;
+    for i in 1..5{
+        if temp != get_suit(hand[i]){
+            res = false;
+        }
+    }
+    return res;
+}
+*/
 
 /* Helper function to get the suit of a card */
 fn get_suit(card: u32) -> u32 {
@@ -532,8 +544,10 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
 fn main(){
     //let mut hand1 = vec![14,24,25,26,23];
 
+
     // let mut hand1 = vec![1,2,16,30,18];
     // let mut hand2 = vec![14,15,3,17,44];
+
 
     // println!("The rank of hand 1 is:{}", get_hand_ranking(&hand1));
     // println!("The rank of hand 2 is:{}", get_hand_ranking(&hand2));
@@ -572,6 +586,7 @@ fn main(){
     //     kicker = arr[0];
     // }
 
+
     // println!("The pairs are {}, {}, and the kicker is {}", num1, num2, kicker);
 
 
@@ -590,6 +605,7 @@ fn main(){
     
     sort_cards(&mut kickers);
     println!("The pair is {} and the remaining cards from high to low is {}, {}, {}", num3, kickers[2], kickers[1], kickers[0]);
+
 }
 
 
