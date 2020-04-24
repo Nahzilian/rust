@@ -39,7 +39,8 @@ fn get_card_rank(card: u32) -> u32{
     res
 }
 
-/* Function returns an array of cards that has the same 
+/* 
+ * Function returns an array of cards that has the same 
  * values to reveal possible four of kind, three of a kind, pairs, ... 
 */
 fn check_match(arr:&Vec<u32>) -> Vec<u32>{
@@ -185,22 +186,18 @@ fn get_hand_ranking(hand:&Vec<u32>) -> u32{
 */
 fn compare_set(hand1: &Vec<u32>,hand2: &Vec<u32>) -> u32{
     if hand1.len() == 4 && has_four_of_kind(hand1) { //======== 4 of a kind ========
-            /*  2 Cases xxxxy or yxxxx where x is the rank of 4 of a kind
-            and y is the rank of the kicker*/
-            if hand1[2]>hand2[2] {return 1} // Compare the third card
-            else {return 2}
+            return compare_by_rank(hand1[3],hand2[3]); //Compare the ranks of 1 card that represent 4 of kind on each hand
     }
     if hand1.len() == 3 { //======== 3 of a kind ========
-        /* 3 Cases xxxyz or yxxxz or yzxxx where x is the rank of 3 of a kind
-        and y,z are the ranks of remaining cards*/
-        if hand1[2]>hand2[2] {return 1} // Compare the third card
-        else {return 2}
+        return compare_by_rank(hand1[2],hand2[2]);
     }
     if hand1.len() == 5 { //======== Full house ========
         /* 2 Cases xxxyy or yyxxx where x is the rank of 3 of a kind
-        and y is the rank of the pair */
-        if hand1[2]>hand2[2] {return 1} // Compare the third card
-        else {return 2}
+        and y is the rank of the pair 
+        In the patterns, 3 of a card always shows up at the third number
+        So we use this to compare
+        */
+        return compare_by_rank(hand1[2],hand2[2]);
     }
     return 0;
 }
@@ -308,10 +305,10 @@ fn winner(hand1:&mut Vec<u32>,hand2:&mut Vec<u32>) -> u32{
             let kicker2;
             //Get the highest cards of each pair at index 1 and 3 since the pairs are sorted.
             //Note that these values are sorted so they are the highest value in the pair which can be used for suit comparison
-            let high1 = set1[1]; //Higher pair
-            let low1 = set1[3]; //Lower pair
-            let high2 = set2[1]; //Higher pair
-            let low2 = set2[3]; //Lower pair
+            let high1 = set1[3]; //Higher pair
+            let low1 = set1[1]; //Lower pair
+            let high2 = set2[3]; //Higher pair
+            let low2 = set2[1]; //Lower pair
             //3 Patterns can be seen when the hand is sorted where x's and y's represents the rank of each pair and z is the kicker card
             // xxyyz     or       xxzyy          or zxxyy
             kicker1 = get_kicker(hand1);
@@ -419,7 +416,7 @@ fn convert_to_string(hand: &Vec<u32>) -> [String;5]{
     }
 
 fn main(){
-    let perm:[u32;10] = [14, 10, 17, 11, 15, 7, 16, 9, 18, 8];
+    let perm:[u32;10] = [2,7,15,33,28,46,16,8,42,9];
     let winner:[String;5] = deal(perm);
     println!("{:?}", winner);
 }
